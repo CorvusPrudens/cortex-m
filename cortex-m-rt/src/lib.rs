@@ -335,13 +335,10 @@
 //!     // 0-1: Reserved
 //!     Vector { reserved: 0 },
 //!     Vector { reserved: 0 },
-//!
 //!     // 2: Foo
 //!     Vector { handler: Foo },
-//!
 //!     // 3: Reserved
 //!     Vector { reserved: 0 },
-//!
 //!     // 4: Bar
 //!     Vector { handler: Bar },
 //! ];
@@ -449,7 +446,7 @@
 //! ```no_run,edition2018
 //! # extern crate core;
 //! # use core::mem::MaybeUninit;
-//! #[link_section=".ccmram.BUFFERS"]
+//! #[link_section = ".ccmram.BUFFERS"]
 //! static mut BUF: MaybeUninit<[u8; 1024]> = MaybeUninit::uninit();
 //! ```
 //!
@@ -539,7 +536,7 @@ cfg_global_asm! {
     // Run user pre-init code which must be executed immediately after startup, before the
     // potentially time-consuming memory initialisation takes place.
     // Example use cases include disabling default watchdogs or enabling RAM.
-    "bl __pre_init",
+    // "bl __pre_init",
 
     // If enabled, initialize RAM with zeros. This is not usually required, but might be necessary
     // to properly initialize checksum-based memory integrity measures on safety-critical hardware.
@@ -579,29 +576,29 @@ cfg_global_asm! {
      b 0b
      1:",
 
-    // Initialise .data memory. `__sdata`, `__sidata`, and `__edata` come from the linker script.
-    "ldr r0, =__sdata
-     ldr r1, =__edata
-     ldr r2, =__sidata
-     0:
-     cmp r1, r0
-     beq 1f
-     ldm r2!, {{r3}}
-     stm r0!, {{r3}}
-     b 0b
-     1:",
+    // // Initialise .data memory. `__sdata`, `__sidata`, and `__edata` come from the linker script.
+    // "ldr r0, =__sdata
+    //  ldr r1, =__edata
+    //  ldr r2, =__sidata
+    //  0:
+    //  cmp r1, r0
+    //  beq 1f
+    //  ldm r2!, {{r3}}
+    //  stm r0!, {{r3}}
+    //  b 0b
+    //  1:",
 
-    // Potentially enable an FPU.
-    // SCB.CPACR is 0xE000_ED88.
-    // We enable access to CP10 and CP11 from priviliged and unprivileged mode.
-    #[cfg(has_fpu)]
-    "ldr r0, =0xE000ED88
-     ldr r1, =(0b1111 << 20)
-     ldr r2, [r0]
-     orr r2, r2, r1
-     str r2, [r0]
-     dsb
-     isb",
+    // // Potentially enable an FPU.
+    // // SCB.CPACR is 0xE000_ED88.
+    // // We enable access to CP10 and CP11 from priviliged and unprivileged mode.
+    // #[cfg(has_fpu)]
+    // "ldr r0, =0xE000ED88
+    //  ldr r1, =(0b1111 << 20)
+    //  ldr r2, [r0]
+    //  orr r2, r2, r1
+    //  str r2, [r0]
+    //  dsb
+    //  isb",
 
     // Jump to user main function.
     // `bl` is used for the extended range, but the user main function should not return,
@@ -706,9 +703,7 @@ pub use macros::interrupt;
 /// # use cortex_m_rt::entry;
 /// #[entry]
 /// fn main() -> ! {
-///     loop {
-///         /* .. */
-///     }
+///     loop { /* .. */ }
 /// }
 /// ```
 ///
@@ -726,9 +721,7 @@ pub use macros::interrupt;
 ///     *foo = 1;
 ///     assert_eq!(*foo, 1);
 ///
-///     loop {
-///         /* .. */
-///     }
+///     loop { /* .. */ }
 /// }
 /// ```
 pub use macros::entry;
