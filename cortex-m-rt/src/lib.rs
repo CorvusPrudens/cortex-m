@@ -576,17 +576,17 @@ cfg_global_asm! {
      b 0b
      1:",
 
-    // // Initialise .data memory. `__sdata`, `__sidata`, and `__edata` come from the linker script.
-    // "ldr r0, =__sdata
-    //  ldr r1, =__edata
-    //  ldr r2, =__sidata
-    //  0:
-    //  cmp r1, r0
-    //  beq 1f
-    //  ldm r2!, {{r3}}
-    //  stm r0!, {{r3}}
-    //  b 0b
-    //  1:",
+    // Initialise .data memory. `__sdata`, `__sidata`, and `__edata` come from the linker script.
+    "ldr r0, =__sdata
+     ldr r1, =__edata
+     ldr r2, =__sidata
+     0:
+     cmp r1, r0
+     beq 1f
+     ldm r2!, {{r3}}
+     stm r0!, {{r3}}
+     b 0b
+     1:",
 
     // // Potentially enable an FPU.
     // // SCB.CPACR is 0xE000_ED88.
